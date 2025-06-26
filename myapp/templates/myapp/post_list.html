@@ -1,0 +1,20 @@
+{% extends 'myapp/base.html' %}
+{% block content %}
+  <h1>Danh sách bài viết</h1>
+  {% if user.is_authenticated %}
+    <a href="{% url 'post_create' %}">Thêm bài viết mới</a>
+  {% endif %}
+  <ul>
+    {% for post in posts %}
+      <li>
+        <a href="{% url 'post_detail' post.pk %}">{{ post.title }}</a> - {{ post.author.username }}
+        {% if user == post.author %}
+          | <a href="{% url 'post_edit' post.pk %}">Sửa</a>
+          | <a href="{% url 'post_delete' post.pk %}">Xóa</a>
+        {% endif %}
+      </li>
+    {% empty %}
+      <li>Chưa có bài viết nào.</li>
+    {% endfor %}
+  </ul>
+{% endblock %} 

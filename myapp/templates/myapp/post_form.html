@@ -1,0 +1,9 @@
+{% extends 'myapp/base.html' %}
+{% block content %}
+  <h2>{% if form.instance.pk %}Sửa bài viết{% else %}Thêm bài viết{% endif %}</h2>
+  <form method="post">{% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Lưu</button>
+  </form>
+  <a href="{% url 'post_list' %}">Quay lại</a>
+{% endblock %} 
