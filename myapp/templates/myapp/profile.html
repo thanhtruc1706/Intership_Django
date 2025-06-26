@@ -1,0 +1,14 @@
+{% extends 'myapp/base.html' %}
+{% block content %}
+  <h2>Profile</h2>
+  <p>Username: {{ user_obj.username }}</p>
+  <p>Email: {{ user_obj.email }}</p>
+  <h3>Bài viết của bạn</h3>
+  <ul>
+    {% for post in posts %}
+      <li><a href="{% url 'post_detail' post.pk %}">{{ post.title }}</a></li>
+    {% empty %}
+      <li>Bạn chưa có bài viết nào.</li>
+    {% endfor %}
+  </ul>
+{% endblock %} 

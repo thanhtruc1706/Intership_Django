@@ -1,0 +1,9 @@
+{% extends 'myapp/base.html' %}
+{% block content %}
+  <h2>Xóa bài viết</h2>
+  <p>Bạn có chắc muốn xóa bài viết "{{ post.title }}"?</p>
+  <form method="post">{% csrf_token %}
+    <button type="submit">Xóa</button>
+    <a href="{% url 'post_detail' post.pk %}">Hủy</a>
+  </form>
+{% endblock %} 
