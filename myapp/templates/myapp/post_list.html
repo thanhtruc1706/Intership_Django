@@ -1,20 +1,43 @@
 {% extends 'myapp/base.html' %}
 {% block content %}
   <h1>Danh sách bài viết</h1>
+  <form method="get" action="" class="mb-3">
+    <input type="text" name="q" placeholder="Tìm kiếm..." value="{{ query }}" class="form-control" style="width: 300px; display: inline-block;">
+    <button type="submit" class="btn btn-primary">Tìm</button>
+  </form>
   {% if user.is_authenticated %}
-    <a href="{% url 'post_create' %}">Thêm bài viết mới</a>
+    <a href="{% url 'post_create' %}" class="btn btn-success mb-3">Thêm bài viết mới</a>
   {% endif %}
-  <ul>
+  <ul class="list-group mb-3">
     {% for post in posts %}
-      <li>
-        <a href="{% url 'post_detail' post.pk %}">{{ post.title }}</a> - {{ post.author.username }}
+      <li class="list-group-item">
+        <a href="{% url 'post_detail' post.pk %}"><strong>{{ post.title }}</strong></a> - {{ post.author.username }}
         {% if user == post.author %}
           | <a href="{% url 'post_edit' post.pk %}">Sửa</a>
           | <a href="{% url 'post_delete' post.pk %}">Xóa</a>
         {% endif %}
       </li>
     {% empty %}
-      <li>Chưa có bài viết nào.</li>
+      <li class="list-group-item">Chưa có bài viết nào.</li>
     {% endfor %}
   </ul>
+  <nav aria-label="Page navigation">
+    <ul class="pagination">
+      {% if posts.has_previous %}
+        <li class="page-item"><a class="page-link" href="?q={{ query }}&page=1">&laquo;</a></li>
+        <li class="page-item"><a class="page-link" href="?q={{ query }}&page={{ posts.previous_page_number }}">&lsaquo;</a></li>
+      {% else %}
+        <li class="page-item disabled"><span class="page-link">&laquo;</span></li>
+        <li class="page-item disabled"><span class="page-link">&lsaquo;</span></li>
+      {% endif %}
+      <li class="page-item active"><span class="page-link">{{ posts.number }}/{{ posts.paginator.num_pages }}</span></li>
+      {% if posts.has_next %}
+        <li class="page-item"><a class="page-link" href="?q={{ query }}&page={{ posts.next_page_number }}">&rsaquo;</a></li>
+        <li class="page-item"><a class="page-link" href="?q={{ query }}&page={{ posts.paginator.num_pages }}">&raquo;</a></li>
+      {% else %}
+        <li class="page-item disabled"><span class="page-link">&rsaquo;</span></li>
+        <li class="page-item disabled"><span class="page-link">&raquo;</span></li>
+      {% endif %}
+    </ul>
+  </nav>
 {% endblock %} 

@@ -7,11 +7,18 @@ from django.contrib.auth.views import LoginView, LogoutView
 from django.contrib.auth.models import User
 from django.contrib import messages
 from django.views import View
+from django.core.paginator import Paginator
 
 # Danh sách bài viết
 def post_list(request):
-    posts = Post.objects.all().order_by('-created_at')
-    return render(request, 'myapp/post_list.html', {'posts': posts})
+    query = request.GET.get('q', '')
+    post_list = Post.objects.all().order_by('-created_at')
+    if query:
+        post_list = post_list.filter(title__icontains=query) | post_list.filter(content__icontains=query)
+    paginator = Paginator(post_list, 5)  # 5 bài viết mỗi trang
+    page_number = request.GET.get('page')
+    posts = paginator.get_page(page_number)
+    return render(request, 'myapp/post_list.html', {'posts': posts, 'query': query})
 
 # Chi tiết bài viết
 def post_detail(request, pk):
